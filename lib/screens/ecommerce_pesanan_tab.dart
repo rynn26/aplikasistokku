@@ -54,33 +54,6 @@ class _EcommercePesananTabState extends State<EcommercePesananTab> {
     }).toList();
   }
 
-  Future<void> _markAsPaid(Order order) async {
-    final ok = await showDialog<bool>(
-      context: context,
-      builder: (d) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Lunasin Pembayaran'),
-        content: Text('Tandai order ${order.orderNumber} sebagai lunas?'),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(d, false), child: const Text('Batal')),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(d, true),
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.green, foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-            child: const Text('Lunas'),
-          ),
-        ],
-      ),
-    );
-    if (ok != true || !mounted) return;
-    final res = await DataService.markOrderAsPaid(order.id);
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(res.success ? 'Order ${order.orderNumber} dilunasi' : (res.message.isNotEmpty ? res.message : 'Gagal')),
-      backgroundColor: res.success ? Colors.green : Colors.red,
-    ));
-    if (res.success) _load();
-  }
 
   Future<void> _deleteOrder(Order order) async {
     final ok = await showDialog<bool>(
@@ -222,7 +195,6 @@ class _EcommercePesananTabState extends State<EcommercePesananTab> {
       builder: (ctx) => _OrderDetailSheet(
         order: order,
         currency: _currency,
-        onMarkPaid: () { Navigator.pop(ctx); _markAsPaid(order); },
         onAddPayment: () { Navigator.pop(ctx); _showPaymentDialog(order); },
         onDelete: () { Navigator.pop(ctx); _deleteOrder(order); },
         onRefresh: _load,
@@ -357,27 +329,8 @@ class _EcommercePesananTabState extends State<EcommercePesananTab> {
                                   Text(o.orderDate, style: TextStyle(fontSize: 11, color: Colors.grey[400])),
                                 ]),
                                 const SizedBox(height: 8),
-                                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                                  Text(_currency.format(o.totalPrice),
-                                    style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: Color(0xFF005FA3))),
-                                  if (!isPaid)
-                                    GestureDetector(
-                                      onTap: () => _markAsPaid(o),
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                        decoration: BoxDecoration(
-                                          color: Colors.green.withValues(alpha: 0.1),
-                                          borderRadius: BorderRadius.circular(8),
-                                          border: Border.all(color: Colors.green.withValues(alpha: 0.3)),
-                                        ),
-                                        child: const Row(mainAxisSize: MainAxisSize.min, children: [
-                                          Icon(Icons.check_circle_outline, size: 13, color: Colors.green),
-                                          SizedBox(width: 4),
-                                          Text('Lunas', style: TextStyle(fontSize: 11, color: Colors.green, fontWeight: FontWeight.w600)),
-                                        ]),
-                                      ),
-                                    ),
-                                ]),
+                                Text(_currency.format(o.totalPrice),
+                                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: Color(0xFF005FA3))),
                               ]),
                             ),
                           );
@@ -410,14 +363,12 @@ class _EcommercePesananTabState extends State<EcommercePesananTab> {
 class _OrderDetailSheet extends StatefulWidget {
   final Order order;
   final NumberFormat currency;
-  final VoidCallback onMarkPaid;
   final VoidCallback onAddPayment;
   final VoidCallback onDelete;
   final Future<void> Function() onRefresh;
   const _OrderDetailSheet({
     required this.order,
     required this.currency,
-    required this.onMarkPaid,
     required this.onAddPayment,
     required this.onDelete,
     required this.onRefresh,
@@ -595,16 +546,6 @@ class _OrderDetailSheetState extends State<_OrderDetailSheet> {
                           label: const Text('Bayar', style: TextStyle(color: _blue)),
                           style: OutlinedButton.styleFrom(
                             side: const BorderSide(color: _blue),
-                            padding: const EdgeInsets.symmetric(vertical: 13),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
-                        )),
-                        const SizedBox(width: 8),
-                        Expanded(child: ElevatedButton.icon(
-                          onPressed: widget.onMarkPaid,
-                          icon: const Icon(Icons.check_circle_outline, size: 16),
-                          label: const Text('Lunas'),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green, foregroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(vertical: 13),
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                         )),

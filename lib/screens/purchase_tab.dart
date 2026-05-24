@@ -158,34 +158,6 @@ class _PurchaseTabState extends State<PurchaseTab> {
     );
   }
 
-  // ─── Lunas Otomatis ──────────────────────────────────────
-  Future<void> _markAsPaid(IncomingProduct item) async {
-    final ok = await showDialog<bool>(
-      context: context,
-      builder: (d) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Lunasin Hutang'),
-        content: Text('Lunasin semua sisa hutang untuk PO ${item.orderNumber}?'),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(d, false), child: const Text('Batal')),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(d, true),
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.green, foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-            child: const Text('Lunas'),
-          ),
-        ],
-      ),
-    );
-    if (ok != true || !mounted) return;
-    final res = await DataService.markIncomingProductAsPaid(item.id);
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(res.success ? 'Hutang berhasil dilunasi' : (res.message.isNotEmpty ? res.message : 'Gagal')),
-      backgroundColor: res.success ? Colors.green : Colors.red,
-    ));
-    if (res.success) _loadPage(_currentPage);
-  }
 
   // ─── Detail Bottom Sheet ─────────────────────────────────
   void _showDetail(IncomingProduct item) {
@@ -271,9 +243,6 @@ class _PurchaseTabState extends State<PurchaseTab> {
                 const SizedBox(width: 8),
                 Expanded(child: _sheetBtn('Bayar', Icons.payment, _blue,
                   () { Navigator.pop(ctx); _showPaymentDialog(item); })),
-                const SizedBox(width: 8),
-                Expanded(child: _sheetBtn('Lunas', Icons.check_circle_outline, Colors.green,
-                  () { Navigator.pop(ctx); _markAsPaid(item); })),
               ],
             ]),
             const SizedBox(height: 8),
@@ -524,10 +493,6 @@ class _PurchaseTabState extends State<PurchaseTab> {
                                     Expanded(child: _quickBtn(
                                       'Bayar', Icons.payment, _blue,
                                       () => _showPaymentDialog(item))),
-                                    const SizedBox(width: 8),
-                                    Expanded(child: _quickBtn(
-                                      'Lunas', Icons.check_circle_outline, Colors.green,
-                                      () => _markAsPaid(item))),
                                     const SizedBox(width: 8),
                                     _iconBtn(Icons.delete_outline, Colors.red, () => _delete(item)),
                                   ]),

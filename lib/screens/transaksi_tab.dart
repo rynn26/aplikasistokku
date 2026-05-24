@@ -152,34 +152,6 @@ class _TransaksiTabState extends State<TransaksiTab> {
     );
   }
 
-  // ─── Lunas otomatis ─────────────────────────────────────
-  Future<void> _markAsPaid(Order o) async {
-    final ok = await showDialog<bool>(
-      context: context,
-      builder: (d) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Tandai Lunas'),
-        content: Text('Lunasin order ${o.orderNumber}?\nSisa pembayaran akan dilunasi otomatis.'),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(d, false), child: const Text('Batal')),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(d, true),
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.green, foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-            child: const Text('Lunas'),
-          ),
-        ],
-      ),
-    );
-    if (ok != true || !mounted) return;
-    final res = await DataService.markOrderAsPaid(o.id);
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(res.success ? 'Order berhasil dilunasi' : (res.message.isNotEmpty ? res.message : 'Gagal')),
-      backgroundColor: res.success ? Colors.green : Colors.red,
-    ));
-    if (res.success) _loadPage(_currentPage);
-  }
 
   // ─── Detail Order Bottom Sheet ──────────────────────────
   void _showDetail(Order o) {
@@ -240,9 +212,6 @@ class _TransaksiTabState extends State<TransaksiTab> {
                 if (o.paymentStatus != 'paid') ...[
                   Expanded(child: _actionButton('Bayar', Icons.payment, Colors.blue,
                     () { Navigator.pop(ctx); _showPaymentDialog(o); })),
-                  const SizedBox(width: 8),
-                  Expanded(child: _actionButton('Lunas', Icons.check_circle_outline, Colors.green,
-                    () { Navigator.pop(ctx); _markAsPaid(o); })),
                   const SizedBox(width: 8),
                 ],
                 Expanded(child: _actionButton('Hapus', Icons.delete_outline, Colors.red,
@@ -426,23 +395,6 @@ class _TransaksiTabState extends State<TransaksiTab> {
                                         Icon(Icons.payment, size: 14, color: Color(0xFF00ADEF)),
                                         SizedBox(width: 4),
                                         Text('Bayar', style: TextStyle(fontSize: 12, color: Color(0xFF00ADEF), fontWeight: FontWeight.w600)),
-                                      ]),
-                                    ),
-                                  )),
-                                  const SizedBox(width: 8),
-                                  Expanded(child: GestureDetector(
-                                    onTap: () => _markAsPaid(o),
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(vertical: 8),
-                                      decoration: BoxDecoration(
-                                        color: Colors.green.withOpacity(0.08),
-                                        borderRadius: BorderRadius.circular(8),
-                                        border: Border.all(color: Colors.green.withOpacity(0.2)),
-                                      ),
-                                      child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                                        Icon(Icons.check_circle_outline, size: 14, color: Colors.green),
-                                        SizedBox(width: 4),
-                                        Text('Lunas', style: TextStyle(fontSize: 12, color: Colors.green, fontWeight: FontWeight.w600)),
                                       ]),
                                     ),
                                   )),
