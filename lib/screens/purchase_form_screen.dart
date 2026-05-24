@@ -163,6 +163,36 @@ class _PurchaseFormScreenState extends State<PurchaseFormScreen> {
                     if (result != null) setState(() => _items = result);
                   },
                 ),
+                if (_items.isNotEmpty) ...[
+                  const Divider(height: 1, indent: 16, endIndent: 16),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: Column(
+                      children: _items.map((i) => Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 32, height: 32,
+                              decoration: BoxDecoration(color: const Color(0xFFF2F3F5), borderRadius: BorderRadius.circular(6)),
+                              child: const Icon(Icons.inventory_2_outlined, color: Colors.grey, size: 16),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(i.product.name, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black87)),
+                                Text('${i.qty % 1 == 0 ? i.qty.toInt() : i.qty} ${i.unit} @ ${_fmt.format(i.price)}',
+                                  style: TextStyle(fontSize: 11, color: Colors.grey[500])),
+                              ],
+                            )),
+                            Text(_fmt.format(i.subtotal), style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: _blue)),
+                          ],
+                        ),
+                      )).toList(),
+                    ),
+                  ),
+                ],
               ]),
               const SizedBox(height: 10),
 

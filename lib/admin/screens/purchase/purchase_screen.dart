@@ -210,22 +210,40 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
               const SizedBox(height: 8),
               _infoRow(Icons.event_outlined, 'Jatuh Tempo', item.dueDate!),
             ],
-            if (item.details != null && item.details!.isNotEmpty) ...[
-              const Divider(height: 24),
-              const Text('Item Produk', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
-              const SizedBox(height: 8),
-              ...item.details!.map((d) => Padding(
-                padding: const EdgeInsets.only(bottom: 6),
-                child: Row(children: [
-                  const Icon(Icons.circle, size: 5, color: _blue),
-                  const SizedBox(width: 8),
-                  Expanded(child: Text('${d.productName ?? '-'} — ${d.stock} ${d.unit}',
-                    style: const TextStyle(fontSize: 12))),
-                  Text(_currency.format(d.totalPrice),
-                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700)),
-                ]),
-              )),
-            ],
+            FutureBuilder<IncomingProduct?>(
+              future: DataService.getIncomingProductDetail(item.id),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 20),
+                    child: Center(child: SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2, color: _blue))),
+                  );
+                }
+                final fullItem = snapshot.data ?? item;
+                if (fullItem.details == null || fullItem.details!.isEmpty) {
+                  return const SizedBox();
+                }
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Divider(height: 24),
+                    const Text('Item Produk', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
+                    const SizedBox(height: 8),
+                    ...fullItem.details!.map((d) => Padding(
+                      padding: const EdgeInsets.only(bottom: 6),
+                      child: Row(children: [
+                        const Icon(Icons.circle, size: 5, color: _blue),
+                        const SizedBox(width: 8),
+                        Expanded(child: Text('${d.productName ?? '-'} — ${d.stock % 1 == 0 ? d.stock.toInt() : d.stock} ${d.unit}',
+                          style: const TextStyle(fontSize: 12))),
+                        Text(_currency.format(d.totalPrice),
+                          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700)),
+                      ]),
+                    )),
+                  ],
+                );
+              },
+            ),
             const Divider(height: 24),
             Row(children: [
               Expanded(child: _sheetBtn('Edit', Icons.edit_outlined, Colors.indigo,
