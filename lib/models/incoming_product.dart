@@ -50,7 +50,9 @@ class IncomingProduct {
       id: json['id'] ?? 0,
       orderNumber: json['order_number'] ?? '',
       supplierId: json['supplier_id'] ?? 0,
-      totalPrice: json['total_price'] ?? 0,
+      totalPrice: (json['total_price'] is num)
+          ? (json['total_price'] as num).toInt()
+          : (double.tryParse('${json['total_price']}')?.toInt() ?? 0),
       status: json['status'] ?? 'pending',
       paymentStatus: json['payment_status'] ?? 'unpaid',
       paymentDate: json['payment_date'],
@@ -92,10 +94,14 @@ class IncomingProductDetail {
       id: json['id'] ?? 0,
       incomingProductId: json['incoming_product_id'] ?? 0,
       productId: json['product_id'] ?? 0,
-      stock: json['stock'] ?? 0,
+      stock: (json['stock'] is num)
+          ? (json['stock'] as num).toInt()
+          : (double.tryParse('${json['stock']}')?.toInt() ?? 0),
       unit: json['unit'] ?? 'pcs',
       price: double.tryParse('${json['price']}') ?? 0,
-      totalPrice: json['total_price'] ?? 0,
+      totalPrice: (json['total_price'] is num)
+          ? (json['total_price'] as num).toInt()
+          : (double.tryParse('${json['total_price']}')?.toInt() ?? 0),
       productName: json['product']?['name'] ?? json['product_name'],
     );
   }

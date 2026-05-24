@@ -242,9 +242,27 @@ class _ReviewState extends State<PurchaseReviewScreen> {
             const SizedBox(height: 20),
             SizedBox(width: double.infinity, child: ElevatedButton(
               onPressed: () {
+                final parsedQty = double.tryParse(qtyCtrl.text) ?? 0.0;
+                final parsedPrice = double.tryParse(priceCtrl.text.replaceAll('.', '')) ?? 0.0;
+                if (parsedQty <= 0) {
+                  ScaffoldMessenger.of(ctx).showSnackBar(const SnackBar(
+                    content: Text('Jumlah harus lebih dari 0'),
+                    backgroundColor: Colors.red,
+                    behavior: SnackBarBehavior.floating,
+                  ));
+                  return;
+                }
+                if (parsedPrice < 0) {
+                  ScaffoldMessenger.of(ctx).showSnackBar(const SnackBar(
+                    content: Text('Harga tidak boleh negatif'),
+                    backgroundColor: Colors.red,
+                    behavior: SnackBarBehavior.floating,
+                  ));
+                  return;
+                }
                 setState(() {
-                  _items[idx].qty   = double.tryParse(qtyCtrl.text) ?? item.qty;
-                  _items[idx].price = double.tryParse(priceCtrl.text.replaceAll('.','')) ?? item.price;
+                  _items[idx].qty   = parsedQty;
+                  _items[idx].price = parsedPrice;
                   _items[idx].unit  = unit;
                 });
                 Navigator.pop(ctx);

@@ -53,7 +53,9 @@ class Product {
       unitPrice: double.tryParse('${json['unit_price']}') ?? 0,
       grosirPrice: double.tryParse('${json['grosir_price']}') ?? 0,
       resellerPrice: double.tryParse('${json['reseller_price']}') ?? 0,
-      stock: json['stock'] ?? 0,
+      stock: (json['stock'] is num)
+          ? (json['stock'] as num).toInt()
+          : (double.tryParse('${json['stock']}')?.toInt() ?? 0),
       weight: json['weight'],
       status: json['status'] ?? 'active',
       isManufacture: json['is_manufacture'] == 1 || json['is_manufacture'] == true,
