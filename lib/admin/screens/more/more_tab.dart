@@ -8,8 +8,8 @@ import 'package:inventoryy/admin/screens/supplier/supplier_list_screen.dart';
 import 'package:inventoryy/admin/screens/setting/setting_screen.dart';
 import 'package:inventoryy/admin/screens/transaction/transaction_summary_screen.dart';
 import 'package:inventoryy/admin/screens/customer/customer_tab.dart';
-import 'package:inventoryy/admin/screens/laporan/laporan_laba_screen.dart';
 import 'package:inventoryy/screens/profile_screen.dart';
+import 'package:inventoryy/admin/screens/laporan/laporan_screen.dart';
 import 'package:inventoryy/screens/pegawai_screen.dart';
 import 'package:inventoryy/screens/notification_screen.dart';
 import 'package:inventoryy/screens/ecommerce_unit_tab.dart';
@@ -123,8 +123,8 @@ class MoreTab extends StatelessWidget {
             // ─── SECTION: Laporan ───────────────────────────────────
             _sectionLabel('Laporan'),
             _menuList(context, [
-              _MenuItem('Laporan Laba', Icons.bar_chart_rounded, const Color(0xFFE8F5E9), Colors.green[700]!,
-                  () => _push(context, const LaporanLabaScreen())),
+              _MenuItem('Laporan Penjualan', Icons.bar_chart_rounded, const Color(0xFFE8F5E9), Colors.green[700]!,
+                  () => _push(context, const LaporanScreen())),
             ]),
             const SizedBox(height: 20),
 

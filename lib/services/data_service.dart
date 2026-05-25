@@ -586,20 +586,6 @@ class DataService {
       ApiService.post('customers/$id/harga-khusus', body: {'prices': prices});
 
   // Alias untuk konsistensi penamaan (dipakai di AppBar badge)
-  static Future<int> getNotificationUnreadCount() => getUnreadNotificationCount();
-
-  // ==================== LAPORAN LABA ====================
-  static Future<Map<String, dynamic>?> getLaporanLaba({
-    String period = 'this_month',
-    String? fromDate,
-    String? toDate,
-  }) async {
-    final params = <String, String>{'period': period};
-    if (fromDate != null) params['from_date'] = fromDate;
-    if (toDate != null) params['to_date'] = toDate;
-    final res = await ApiService.get('laporan-laba', params: params);
-    if (res.success && res.data != null) return Map<String, dynamic>.from(res.data);
-    return null;
-  }
+  static Future<int> getNotificationUnreadCount() => getUnreadNotificationCount();}
 }
 
