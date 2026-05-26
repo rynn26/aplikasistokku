@@ -591,6 +591,5 @@ class DataService {
       ApiService.post('customers/$id/harga-khusus', body: {'prices': prices});
 
   // Alias untuk konsistensi penamaan (dipakai di AppBar badge)
-  static Future<int> getNotificationUnreadCount() => getUnreadNotificationCount();}
+  static Future<int> getNotificationUnreadCount() => getUnreadNotificationCount();
 }
-

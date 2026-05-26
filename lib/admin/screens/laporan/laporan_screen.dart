@@ -419,7 +419,7 @@ class _LaporanScreenState extends State<LaporanScreen> {
             if (subItems.isEmpty)
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8),
-                child: Text('Tidak ada detail', style: TextStyle(fontSize: 12, color: Colors.grey[400], italic: true)),
+                child: Text('Tidak ada detail', style: TextStyle(fontSize: 12, color: Colors.grey[400], fontStyle: FontStyle.italic)),
               )
             else
               ...subItems.map((sub) => _buildSubItemRow(sub)),
@@ -450,7 +450,9 @@ class _LaporanScreenState extends State<LaporanScreen> {
 
       return Container(
         padding: const EdgeInsets.symmetric(vertical: 8),
-        border: const Border(bottom: BorderSide(color: Color(0xFFF8FAFC), width: 1)),
+        decoration: const BoxDecoration(
+          border: Border(bottom: BorderSide(color: Color(0xFFF8FAFC), width: 1)),
+        ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -484,7 +486,9 @@ class _LaporanScreenState extends State<LaporanScreen> {
 
       return Container(
         padding: const EdgeInsets.symmetric(vertical: 8),
-        border: const Border(bottom: BorderSide(color: Color(0xFFF8FAFC), width: 1)),
+        decoration: const BoxDecoration(
+          border: Border(bottom: BorderSide(color: Color(0xFFF8FAFC), width: 1)),
+        ),
         child: Row(
           children: [
             Expanded(
