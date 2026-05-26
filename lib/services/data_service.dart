@@ -517,10 +517,15 @@ class DataService {
     if (year != null) params['year'] = '$year';
     final res = await ApiService.get('reports', params: params);
     if (res.success && res.data != null) {
-      final d = res.data is Map<String, dynamic> ? (res.data['data'] ?? res.data) : {};
-      return d is Map<String, dynamic> ? d : {};
+      if (res.data is Map) {
+        final rawData = res.data['data'];
+        return {
+          'sales_data': rawData is List ? rawData : [],
+          'meta': res.data['meta'] ?? {},
+        };
+      }
     }
-    return {};
+    return {'sales_data': [], 'meta': {}};
   }
 
   // ==================== NOTIFICATIONS ====================
