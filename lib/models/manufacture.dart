@@ -19,9 +19,9 @@ class ManufactureIngredient {
 
   factory ManufactureIngredient.fromJson(Map<String, dynamic> j) =>
       ManufactureIngredient(
-        ingredientId:   j['ingredient_id'] ?? 0,
+        ingredientId:   j['ingredient_id'] is int ? j['ingredient_id'] : int.tryParse('${j['ingredient_id'] ?? 0}') ?? 0,
         ingredientName: j['ingredient_name'] ?? '',
-        unitId:         j['unit_id'] ?? 0,
+        unitId:         j['unit_id'] is int ? j['unit_id'] : int.tryParse('${j['unit_id'] ?? 0}') ?? 0,
         unitName:       j['unit_name'] ?? '',
         quantity:       (j['quantity'] as num?)?.toDouble() ?? 0,
         price:          (j['price'] as num?)?.toDouble() ?? 0,
@@ -43,8 +43,8 @@ class ManufactureProduct {
 
   factory ManufactureProduct.fromJson(Map<String, dynamic> j) =>
       ManufactureProduct(
-        productId:   j['product_id'] ?? 0,
-        unitId:      j['unit_id'] ?? 0,
+        productId:   j['product_id'] is int ? j['product_id'] : int.tryParse('${j['product_id'] ?? 0}') ?? 0,
+        unitId:      j['unit_id'] is int ? j['unit_id'] : int.tryParse('${j['unit_id'] ?? 0}') ?? 0,
         quantity:    (j['quantity'] as num?)?.toDouble() ?? 0,
         costPerItem: (j['cost_per_item'] as num?)?.toDouble() ?? 0,
       );
@@ -110,7 +110,7 @@ class Manufacture {
       totalPrice:      json['total_price'] is num ? (json['total_price'] as num).toInt() : null,
       userId:          json['user_id'] ?? 0,
       createdAt:       json['created_at'],
-      userName:        json['user']?['name'],
+      userName:        json['user_name'] ?? json['user']?['name'],
       ingredients:     ingredients,
       producedProducts: producedProducts,
     );
