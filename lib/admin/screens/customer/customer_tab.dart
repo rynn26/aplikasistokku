@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../services/data_service.dart';
 import '../../../models/customer.dart';
 import '../../../widgets/pagination_widget.dart';
+import '../../../screens/customer_detail_screen.dart';
 
 class CustomerTab extends StatefulWidget {
   const CustomerTab({super.key});
@@ -296,30 +297,101 @@ class _CustomerTabState extends State<CustomerTab> {
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         // Info row
-        Padding(
-          padding: const EdgeInsets.fromLTRB(14, 14, 14, 10),
-          child: Row(children: [
-            CircleAvatar(
-              radius: 20,
-              backgroundColor: typeColor.withValues(alpha: 0.12),
-              child: Text(c.name[0].toUpperCase(),
-                style: TextStyle(fontWeight: FontWeight.bold, color: typeColor, fontSize: 15)),
+        InkWell(
+          onTap: () => showModalBottomSheet(
+            context: context,
+            backgroundColor: Colors.transparent,
+            builder: (ctx) => Container(
+              padding: const EdgeInsets.all(24),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(2)),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(c.name, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800)),
+                  const SizedBox(height: 16),
+                  ListTile(
+                    leading: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(color: _cyan.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(10)),
+                      child: const Icon(Icons.analytics_outlined, color: _cyan),
+                    ),
+                    title: const Text('Lihat Detail & Analitik'),
+                    subtitle: const Text('Riwayat transaksi, produk terbeli, harga khusus'),
+                    onTap: () {
+                      Navigator.pop(ctx);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => CustomerDetailScreen(customer: c)),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    leading: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(color: Colors.orange.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(10)),
+                      child: const Icon(Icons.edit_outlined, color: Colors.orange),
+                    ),
+                    title: const Text('Edit Pelanggan'),
+                    onTap: () {
+                      Navigator.pop(ctx);
+                      _showForm(customer: c);
+                    },
+                  ),
+                  ListTile(
+                    leading: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(color: Colors.red.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(10)),
+                      child: const Icon(Icons.delete_outline, color: Colors.red),
+                    ),
+                    title: const Text('Hapus Pelanggan', style: TextStyle(color: Colors.red)),
+                    onTap: () {
+                      Navigator.pop(ctx);
+                      _delete(c);
+                    },
+                  ),
+                  const SizedBox(height: 8),
+                ],
+              ),
             ),
-            const SizedBox(width: 12),
-            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(c.name, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: Color(0xFF1E293B))),
-              if (c.phone != null && c.phone!.isNotEmpty)
-                Text(c.phone!, style: TextStyle(fontSize: 12, color: Colors.grey[500])),
-              if (c.address != null && c.address!.isNotEmpty)
-                Text(c.address!, style: TextStyle(fontSize: 11, color: Colors.grey[400]),
-                  maxLines: 1, overflow: TextOverflow.ellipsis),
-            ])),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(color: typeColor.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)),
-              child: Text(typeLabel, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: typeColor)),
-            ),
-          ]),
+          ),
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(14),
+            topRight: Radius.circular(14),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(14, 14, 14, 10),
+            child: Row(children: [
+              CircleAvatar(
+                radius: 20,
+                backgroundColor: typeColor.withValues(alpha: 0.12),
+                child: Text(c.name[0].toUpperCase(),
+                  style: TextStyle(fontWeight: FontWeight.bold, color: typeColor, fontSize: 15)),
+              ),
+              const SizedBox(width: 12),
+              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(c.name, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: Color(0xFF1E293B))),
+                if (c.phone != null && c.phone!.isNotEmpty)
+                  Text(c.phone!, style: TextStyle(fontSize: 12, color: Colors.grey[500])),
+                if (c.address != null && c.address!.isNotEmpty)
+                  Text(c.address!, style: TextStyle(fontSize: 11, color: Colors.grey[400]),
+                    maxLines: 1, overflow: TextOverflow.ellipsis),
+              ])),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(color: typeColor.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)),
+                child: Text(typeLabel, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: typeColor)),
+              ),
+            ]),
+          ),
         ),
         // Divider + action buttons
         Divider(height: 1, color: Colors.grey[100]),
